@@ -1,0 +1,44 @@
+# Attrition Rate:
+SELECT (COUNT(*) * 100 / (SELECT COUNT(*) FROM employees)) AS attrition_rate
+FROM employees
+WHERE attrition = 'Yes';
+
+# Employee Demographics - Attrition by Gender:
+SELECT gender, COUNT(*) AS attrition_count
+FROM employees
+WHERE attrition = 'Yes'
+GROUP BY gender;
+
+# Job Role Analysis - Attrition by Job Role:
+SELECT job_role, COUNT(*) AS attrition_count
+FROM employees
+WHERE attrition = 'Yes'
+GROUP BY job_role
+ORDER BY attrition_count DESC;
+
+# Performance Analysis - Attrition by Performance Rating:
+SELECT performance_rating, COUNT(*) AS attrition_count
+FROM employees
+WHERE attrition = 'Yes'
+GROUP BY performance_rating;
+
+# Satisfaction Analysis - Attrition by Satisfaction Score:
+SELECT satisfaction_score, COUNT(*) AS attrition_count
+FROM employees
+WHERE attrition = 'Yes'
+GROUP BY satisfaction_score;
+
+# Tenure Analysis - Attrition by Employee Tenure:
+SELECT CASE
+        WHEN tenure_years < 2 THEN 'Less than 2 years'
+        WHEN tenure_years >= 2 AND tenure_years < 5 THEN '2-5 years'
+        WHEN tenure_years >= 5 AND tenure_years < 10 THEN '5-10 years'
+        ELSE '10+ years'
+       END AS tenure_range,
+       COUNT(*) AS attrition_count
+FROM (
+  SELECT emp_id, DATEDIFF(CURDATE(), hire_date) / 365 AS tenure_years
+  FROM employees
+) AS t
+WHERE attrition = 'Yes'
+GROUP BY tenure_range;
