@@ -1,0 +1,39 @@
+# Page Views:
+SELECT page_url, COUNT(*) AS page_views
+FROM website_logs
+GROUP BY page_url
+ORDER BY page_views DESC;
+
+# Session Analysis - Average Session Duration and Pages per Session:
+SELECT session_id, 
+       TIMESTAMPDIFF(SECOND, MIN(timestamp), MAX(timestamp)) AS session_duration,
+       COUNT(DISTINCT page_url) AS pages_per_session
+FROM website_logs
+GROUP BY session_id;
+
+# Conversion Funnel Analysis:
+SELECT event_type, COUNT(*) AS event_count
+FROM website_logs
+WHERE event_type IN ('Form Submission', 'Purchase')
+GROUP BY event_type;
+
+# User Engagement - Average Time on Page:
+SELECT page_url, AVG(time_on_page) AS avg_time_on_page
+FROM website_logs
+GROUP BY page_url;
+
+# Referral Analysis:
+SELECT referral_source, COUNT(*) AS visits
+FROM website_logs
+GROUP BY referral_source
+ORDER BY visits DESC;
+
+# User Segmentation - Segment Users based on Behavior:
+SELECT user_id, 
+       CASE
+           WHEN COUNT(DISTINCT page_url) >= 10 THEN 'Engaged User'
+           WHEN COUNT(DISTINCT page_url) < 5 THEN 'Casual User'
+           ELSE 'Regular User'
+       END AS user_segment
+FROM website_logs
+GROUP BY user_id;
